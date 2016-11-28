@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.views import APIView
@@ -49,6 +49,3 @@ class SafraDetail(APIView):
         safra = self.get_object(pk)
         safra.delete()
         return Response(safra)
-
-
-    
