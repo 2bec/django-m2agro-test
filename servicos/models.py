@@ -24,6 +24,16 @@ class Servico(models.Model):
 	def __str__(self):
 		return self.nome
 
+	def get_custo_total(self):
+		"""
+		Calcula o custo total de um servico
+		"""
+		total = 0
+		for v in self.valores_set.all():
+			total += v.preco
+		return total
+
+
 
 class Valores(models.Model):
 	produto = models.ForeignKey(Produto)
@@ -35,11 +45,13 @@ class Valores(models.Model):
 	updated = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
 
+	objects = NoDeleteQuerySet()
+
 	class Meta:
 		ordering = ('servico',)
 
 	def __str__(self):
-		return self.produto
+		return self.produto.nome
 
 	def delete(self):
 		self.is_active = False
