@@ -1,22 +1,67 @@
-from django.shortcuts import render, get_object_or_404
+import datetime
 
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 
 from produtos.models import Produto
-from produtos.serializers import ProdutoSerializer
+from produtos.serializers import ProdutoSerializer, PrecoMedioSerializer, PrecoMedioMensalSerializer
+from servicos.models import Servico
 
 
-def preco_medio(produto):
-	"""
-	Calcula o preco medio de um produto
-	"""
-	total = 0
-	for v in produto.valores_set.all():
-		total += v.preco
-	n = produto.valores_set.all().count()
-	return total / n
+def preco_medio(mes, ano):
+    """
+    Calcula o preco medio dos produtos utilizados nos servicos do mes.
+    """
+    # recupera todos os servicos filtrados por mes e ano
+    servicos = Servico.objects.filter(data_inicio__month=mes, data_inicio__year=ano)
+
+    total_preco = {}
+    total_produto = {}
+
+    # Interage com cada servico
+    # Armazena num dicionario
+    # total de preco e total de produtos
+    for s in servicos.iterator():
+        # recupera todos os valores gastos com o servico
+        valores = s.valores_set.all()
+        for v in valores.iterator():
+            # faz a soma do preco e quantidade de cada produto
+            total_preco[v.produto.nome] = total_preco.get(v.produto.nome, 0) + v.preco
+            total_produto[v.produto.nome] = total_produto.get(v.produto.nome, 0) + v.quantidade
+
+    # Calcula o preco medio de cada produto
+    # e salva novo preco medio no modelo
+    for k,v in total_preco.items():
+        produto = get_object_or_404(Produto, nome=k)
+        preco_medio = total_preco[k] / total_produto[k]
+        produto.preco_medio = preco_medio
+        produto.save()
+
+
+class PrecoMedioUpdate(APIView):
+    """
+    List all, or update all.
+    """
+
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, format=None):
+        # Podemos realizar filtos no resultado de produtos
+        produtos = Produto.objects.filter(is_active=True)
+        serializer = PrecoMedioSerializer(produtos, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+        serializer = PrecoMedioMensalSerializer(data=request.data)
+        if serializer.is_valid():
+            mes = serializer.data.get('mes')
+            ano = serializer.data.get('ano')
+            preco_medio(mes, ano)
+            return self.get(self,request)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ProdutosList(APIView):
@@ -60,6 +105,3 @@ class ProdutoDetail(APIView):
         produto = self.get_object(pk)
         produto.delete()
         return Response(produto)
-
-
-    
