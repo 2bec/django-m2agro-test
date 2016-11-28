@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 from safras.models import Safra
-from produtos.models import Produto
+from produtos.models import Produto, NoDeleteQuerySet
 
 
 class Servico(models.Model):
@@ -14,7 +14,9 @@ class Servico(models.Model):
 	produtos = models.ManyToManyField(Produto, through="Valores")
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	is_active = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
+
+	objects = NoDeleteQuerySet()
 
 	class Meta:
 		ordering = ('data_inicio',)
@@ -31,10 +33,14 @@ class Valores(models.Model):
 	data_compra = models.DateTimeField(blank=True)
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	is_active = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
 
 	class Meta:
 		ordering = ('servico',)
 
 	def __str__(self):
 		return self.produto
+
+	def delete(self):
+		self.is_active = False
+		self.save()
