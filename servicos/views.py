@@ -48,7 +48,7 @@ class ServicoDetail(APIView):
     def delete(self, request, pk, format=None):
         servico = self.get_object(pk)
         servico.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(servico)
 
 
     
