@@ -14,7 +14,7 @@ class Produto(models.Model):
 	preco_medio = models.DecimalField(decimal_places=2, max_digits=5, null=True, blank=True)
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
-	is_active = models.BooleanField(default=False)
+	is_active = models.BooleanField(default=True)
 
 	objects = NoDeleteQuerySet()
 
