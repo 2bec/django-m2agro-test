@@ -14,7 +14,7 @@ class SafrasList(APIView):
     """
     def get(self, request, format=None):
     # Podemos realizar filtos no resultado de safras
-        safras = Safra.objects.all()
+        safras = Safra.objects.filter(is_active=True)
         serializer = SafraSerializer(safras, many=True)
         return Response(serializer.data)
 
@@ -48,7 +48,7 @@ class SafraDetail(APIView):
     def delete(self, request, pk, format=None):
         safra = self.get_object(pk)
         safra.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(safra)
 
 
     
