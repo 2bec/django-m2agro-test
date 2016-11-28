@@ -7,4 +7,4 @@ class SafraSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Safra
-        fields = ('pk', 'nome', 'data_inicio', 'data_fim')
+        fields = ('pk', 'nome', 'data_inicio', 'data_fim', 'is_active')
