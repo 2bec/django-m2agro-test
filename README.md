@@ -2,7 +2,7 @@
 API Django.
 
 # Documento
-Leia a documentação para mais informações. [](doc_v1.pdf)
+Leia a documentação para mais informações. [Documento em PDF](https://github.com/2bec/django-m2agro-test/blob/master/M2Agro-DjangoRESTAPI.pdf)
 
 # Funcionamento
 Use requests para simular e verificar o funcionamento da API.
