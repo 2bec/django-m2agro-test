@@ -1,6 +1,12 @@
 # django-m2agro-test
 API Django.
 
+# Requirements
+- Django
+- djangorestframework
+
+``` pip install -r requirements.txt ```
+
 # Documento
 Leia a documentação para mais informações. [Documento em PDF](https://github.com/2bec/django-m2agro-test/blob/master/M2Agro-DjangoRESTAPI.pdf)
 
