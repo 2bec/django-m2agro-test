@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from produtos.models import NoDeleteQuerySet
+
 
 class Safra(models.Model):
 
@@ -11,8 +11,6 @@ class Safra(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
-
-	objects = NoDeleteQuerySet()
 
 	class Meta:
 		ordering = ('data_inicio',)

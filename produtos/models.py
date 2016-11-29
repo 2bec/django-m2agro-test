@@ -3,11 +3,6 @@ from __future__ import unicode_literals
 from django.db import models
 
 
-class NoDeleteQuerySet(models.query.QuerySet):
-
-	def delete(self):
-		self.update(is_active=False)
-
 class Produto(models.Model):
 
 	nome = models.CharField(max_length=180, blank=False, null=False)
@@ -15,8 +10,6 @@ class Produto(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
-
-	objects = NoDeleteQuerySet()
 
 	class Meta:
 		ordering = ('created',)

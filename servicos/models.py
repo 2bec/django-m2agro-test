@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 
 from safras.models import Safra
-from produtos.models import Produto, NoDeleteQuerySet
+from produtos.models import Produto
 
 
 class Servico(models.Model):
@@ -16,13 +16,15 @@ class Servico(models.Model):
 	updated = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
 
-	objects = NoDeleteQuerySet()
-
 	class Meta:
 		ordering = ('data_inicio',)
 
 	def __str__(self):
 		return self.nome
+
+	def delete(self):
+		self.is_active = False
+		self.save()
 
 	def get_custo_total(self):
 		"""
@@ -34,7 +36,6 @@ class Servico(models.Model):
 		return total
 
 
-
 class Valores(models.Model):
 	produto = models.ForeignKey(Produto)
 	servico = models.ForeignKey(Servico)
@@ -44,8 +45,6 @@ class Valores(models.Model):
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
-
-	objects = NoDeleteQuerySet()
 
 	class Meta:
 		ordering = ('servico',)
