@@ -41,7 +41,14 @@ INSTALLED_APPS = [
     'produtos',
     'safras',
     'servicos',
+    'oauth2_provider'
 ]
+
+REST_FRAMEWORK = { 
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication', 
+    ), 
+} 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

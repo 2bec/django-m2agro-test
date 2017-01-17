@@ -1,5 +1,7 @@
 from django.shortcuts import get_object_or_404
 
+from m2agro.permissions import IsAuthenticatedOrReadOnly
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,6 +14,8 @@ class SafrasList(APIView):
     """
     List all, or create a new one.
     """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     def get(self, request, format=None):
     # Podemos realizar filtos no resultado de safras
         safras = Safra.objects.filter(is_active=True)
@@ -29,6 +33,8 @@ class SafraDetail(APIView):
     """
     Retrieve, update or delete a instance.
     """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     def get_object(self, pk):
         return get_object_or_404(Safra, pk=pk)
 

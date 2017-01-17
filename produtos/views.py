@@ -1,8 +1,11 @@
 import datetime
 
+from m2agro.permissions import IsAuthenticatedOrReadOnly
+
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 
@@ -10,7 +13,8 @@ from produtos.models import Produto
 from produtos.serializers import ProdutoSerializer, PrecoMedioSerializer, PrecoMedioMensalSerializer
 from servicos.models import Servico
 
-
+@api_view(['GET'])
+@permission_classes((IsAuthenticatedOrReadOnly, ))
 def preco_medio(mes, ano):
     """
     Calcula o preco medio dos produtos utilizados nos servicos do mes.
@@ -47,6 +51,7 @@ class PrecoMedioUpdate(APIView):
     """
 
     renderer_classes = (JSONRenderer, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get(self, request, format=None):
         # Podemos realizar filtos no resultado de produtos
@@ -68,6 +73,8 @@ class ProdutosList(APIView):
     """
     List all, or create a new one.
     """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     def get(self, request, format=None):
         # Podemos realizar filtos no resultado de produtos
         produtos = Produto.objects.filter(is_active=True)

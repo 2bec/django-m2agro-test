@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^api/v1/produtos/', include("produtos.urls")),
     url(r'^api/v1/safras/', include("safras.urls")),
     url(r'^api/v1/servicos/', include("servicos.urls")),
+    url(r'^oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    
 ]
